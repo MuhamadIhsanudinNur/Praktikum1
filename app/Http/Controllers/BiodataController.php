@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Biodata;
+use Illuminate\Support\Facades\Auth;
+
 class BiodataController extends Controller
 {
     /**
@@ -13,6 +15,9 @@ class BiodataController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->isadmin != 1){
+            abort(403);
+        }
         $Data=[
             'title'=>'List Siswa',
             'siswas'=>Biodata::orderBy('created_at', 'desc')->get(),
@@ -29,7 +34,11 @@ class BiodataController extends Controller
      */
     public function create()
     {
-        //
+        $data=[
+            'title'=>'Tambah Siswa',
+            // 'route' => route('biodata.store'),
+        ];
+        return view('form_siswa', $data);
     }
 
     /**
@@ -40,7 +49,18 @@ class BiodataController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $bio = new Biodata;
+        $bio->nama = $request->nama;
+        $bio->lahir = $request->tmpt;
+        $bio->tgl=$request->tgl;
+        $bio->jk=$request->jk;
+        $bio->hoby=$request->hobby;
+        $bio->agama=$request->agama;
+        $bio->alamat=$request->alamat;
+        $bio->telp=$request->telp;
+        $bio->email=$request->email;
+        $bio->save();
+        return redirect()->route('list');
     }
 
     /**
@@ -51,7 +71,11 @@ class BiodataController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = [
+            'Title' => 'Curriculum Vitae',
+            'bio' => Biodata::where('id', $id)->first(),
+        ];
+        return view('bio', $data);
     }
 
     /**
@@ -62,7 +86,13 @@ class BiodataController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = [
+            'title' => 'Edit Biodata',
+            'method' => 'PUT',
+            'route' => route('update_siswa', $id),
+            'bio' => Biodata::where('id', $id)->first(),
+        ];
+        return view('edit_siswa', $data);
     }
 
     /**
@@ -74,7 +104,18 @@ class BiodataController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $bio = Biodata::find($id);
+        $bio->nama = $request->nama;
+        $bio->lahir = $request->tmpt;
+        $bio->tgl=$request->tgl;
+        $bio->jk=$request->jk;
+        $bio->hoby=$request->hobby;
+        $bio->agama=$request->agama;
+        $bio->alamat=$request->alamat;
+        $bio->telp=$request->telp;
+        $bio->email=$request->email;
+        $bio->update();
+        return redirect()->route('list');
     }
 
     /**
@@ -85,6 +126,8 @@ class BiodataController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $destroy =Biodata::where('id', $id);
+        $destroy->delete();
+        return redirect(route('list'));
     }
 }

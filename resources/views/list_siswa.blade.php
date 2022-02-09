@@ -52,8 +52,8 @@
     </nav>
     <div class="jumbotron jumbotron-fluid">
         <div class="container-fluid">
-            <h1 class="display-5">Lihat Siswa</h1>
-            <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+            <h1 class="display-5">List Data Siswa</h1>
+            <p class="lead">LIST</p>
         </div>
     </div>
     <div class="container-fluid">
@@ -65,6 +65,7 @@
                             <th scope="col">No</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Lahir</th>
+                            <th scope="col">Tanggal</th>
                             <th scope="col">Gender</th>
                             <th scope="col">Agama</th>
                             <th scope="col">Alamat</th>
@@ -87,15 +88,19 @@
                             <td>{{ $siswa->alamat}}</td>
                             <td>{{ $siswa->telp}}</td>
                             <td>{{ $siswa->email}}</td>
-                        <td>
-                            <button type="button" class="btn btn-warning">Edit</button>
-                            <button type="button" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-primary">Lihat</button>
+                        <td><form method="POST" action="{{ route('destroy-siswa',$siswa->id) }}">
+                            <a button type="button" class="btn btn-warning" href="{{ route('edit_siswa',$siswa->id)}}">Edit</button></a>
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <a button type="button" class="btn btn-primary" href="{{ route('show-bio',$siswa->id) }}">Lihat</button></a>
+                        </form>
                         </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+                <a href="{{ route('form_siswa')}}">
                 <button type="button" class="btn btn-primary">Add New</button>
             </div>
             <div>
